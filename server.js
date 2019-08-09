@@ -172,17 +172,26 @@ server.post('/chores', (request, response) => {
 server.put('/chores/:id', (request, response) => {
   const choreID = request.params.id
   const choreChange = request.body
-  let foundChore = []
   console.log(parseInt(choreID))
-  choresArray.map(chore => {
+  choresArray.forEach(chore => {
     if (parseInt(choreID) === chore.id) {
-      foundChore.push({
+      console.log(chore.id)
+      chore = {
         ...chore,
         choreChange
-      })
+      }
+      console.log(chore)
+    } else {
+      chore
     }
   })
-  response.status(200).json(foundChore)
+  response.status(200).json(choresArray)
+})
+
+server.delete('/chores/:id', (request, response) => {
+  const choreID = request.params.id
+  choresArray = choresArray.filter(chore => chore.id !== parseInt(choreID))
+  response.status(200).json(choresArray)
 })
 
 module.exports = server;
