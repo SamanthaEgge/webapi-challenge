@@ -74,18 +74,22 @@ function validateChore(newChore) {
 
 function manipulateNewChore(chore) {
   const lastChore = choresArray.pop()
-  const lastID = lastChore.id
+  const lastID = parseInt(lastChore.id)
+  console.log('we hit manipulateNewChore')
   let manipulateChore = chore
+  console.log(manipulateChore)
+  console.log(lastID)
+  console.log('testing', lastID + 1)
   if (manipulateChore.notes) {
     return manipulateChore = {
       ...chore,
-      id: lastID++,
+      id: lastID+1,
       completed: false,
     }
   } else {
     return manipulateChore = {
       ...chore,
-      id: lastID++,
+      id: lastID+1,
       completed: false,
       notes: ''
     }
@@ -108,7 +112,6 @@ function getChoresById(peopID) {
       console.log('chore check??', chore)
     }
   })
-  console.log('filteredChores check', filteredChores)
 
   return filteredChores
 
@@ -118,8 +121,9 @@ async function createChore(chore) {
   console.log('this is chore in createChore', chore)
   try {
     const validation = await validateChore(chore)
-    console.log(validation)
+    console.log('validation in createChore', validation)
     const structuredChore = await manipulateNewChore(chore)
+    console.log('this is structuredChore in createChore', structuredChore)
     return structuredChore
   } catch (e) {
     console.log('something broke')
