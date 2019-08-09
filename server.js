@@ -150,7 +150,7 @@ server.get('/chores', (request, response) => {
 
 
 //// Get chores by user
-server.get('/chores/:id', (request, response) => {
+server.get('/person/:id', (request, response) => {
   const id = request.params.id
   const choresbyID = getChoresById(id)
   console.log(choresArray.filter(chore => chore.people_id === id))
@@ -158,6 +158,7 @@ server.get('/chores/:id', (request, response) => {
   response.status(200).json(choresbyID)
 })
 
+//// Post a new chore
 server.post('/chores', (request, response) => {
   const addedChore = request.body
   const createaChore = createChore(addedChore)
@@ -167,11 +168,19 @@ server.post('/chores', (request, response) => {
   response.status(202).json(createaChore)
 })
 
+//// modify a current chore
 server.put('/chores/:id', (request, response) => {
   const choreID = request.params.id
+  const choreChange = request.body
   let foundChore = []
+  console.log(parseInt(choreID))
   choresArray.map(chore => {
-    console.log(chore.id)
+    if (parseInt(choreID) === chore.id) {
+      foundChore.push({
+        ...chore,
+        choreChange
+      })
+    }
   })
   response.status(200).json(foundChore)
 })
