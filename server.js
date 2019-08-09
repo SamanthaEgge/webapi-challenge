@@ -62,16 +62,25 @@ function getChores() {
 }
 
 function getChoresById(peopID) {
-  const filteredChores = []
+  let filteredChores = []
   filteredChores = choresArray.filter(chore => chore.people_id === peopID)
-  console.log(filteredChores)
+  console.log('filteredChores check', filteredChores)
 
   return filteredChores
 
 }
 
-function createChore(chore) {
-
+async function createChore(chore) {
+  console.log('this is chore in createChore', chore)
+  try {
+    const validation = await validateChore(chore)
+    console.log(validation)
+    const structuredChore = await manipulateNewChore(chore)
+    return structuredChore
+  } catch (e) {
+    console.log('something broke')
+  }
+  return structuredChore
 }
 
 server.get('/', (req, res) => {
@@ -82,7 +91,7 @@ server.get('/', (req, res) => {
 server.get('/chores', (request, response) => {
   const chores = getChores()
   console.log('checking to see if chores has something', chores)
-  response.status(200).response.json(chores)
+  response.status(200).json(chores)
     // .then(chores => {
     //   console.log(chores)
     //   response.status(200).json(chores) ????????????????????????????????????????
@@ -95,12 +104,19 @@ server.get('/chores', (request, response) => {
 
 
 //// Get chores by user
-server.get('/chores/:id', validatePerson, (request, response) => {
+server.get('/chores/:id', (request, response) => {
   const id = request.params.id
-  db.getChoresById(id)
-    response.json(response)
+  const choresbyID = getChoresById(id)
+
+  ///// VALIDATECHORE RUNS HERE
+  response.status(200).json(choresbyID)
 })
 
+server.post('/chores', (request, response) => {
+  const addedChore = request.body
+  const createaChore = createChore(addedChore)
+  response.status(202).json(createaChore)
+})
 
 // ///// Middleware
 // Check to determine if user exists
@@ -109,11 +125,12 @@ function validatePerson(request, response, next) {
   console.log('validation id check', request.params.id)
   let selectedPerson = null
   peopleArray.map(people => {
-    if (id === urlid) {
+    if (people.id === urlid) {
       selectedPerson = people
     }
   })
   if (selectedPerson) {
+    console.log('selectedPerson', selectedPerson)
     next()
   } else {
     response.status(404).response.json({ message: 'user not found' })
@@ -121,18 +138,38 @@ function validatePerson(request, response, next) {
 }
 
 // Check to see if new chore meets required values
-function validateChore(request, response, next) {
-  const newChore = request.body
+function validateChore(newChore) {
   console.log('this is newChore in validation', newChore)
   if (newChore.description) {
     if (newChore.people_id) {
-      next()
+      return 'validateChore Passed?'
     } else {
       response.status(500).response.json({ message: 'inlcude a people_id for this chore'})
     }
   } else {
     response.status(500).response.json({ message: 'please include a description for a new chore' })
   }
+}
+
+function manipulateNewChore(chore) {
+  const lastChore = choresArray.pop()
+  const lastID = lastChore.id
+  const manipulateChore = chore
+  if (manipulatedChore.notes) {
+    return chore = {
+      ...chore,
+      id: lastID++,
+      completed: false,
+    }
+  } else {
+    return chore = {
+      ...chore,
+      id: lastID++,
+      completed: false,
+      notes: ''
+    }
+  }
+
 }
 
 
