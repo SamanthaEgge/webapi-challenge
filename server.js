@@ -70,6 +70,10 @@ function getChoresById(peopID) {
 
 }
 
+function createChore(chore) {
+
+}
+
 server.get('/', (req, res) => {
   res.send(`<h2>This server is initialized</h2>`)
 });
@@ -77,6 +81,7 @@ server.get('/', (req, res) => {
 //// Get a list of chores
 server.get('/chores', (request, response) => {
   const chores = getChores()
+  console.log('checking to see if chores has something', chores)
   response.status(200).response.json(chores)
     // .then(chores => {
     //   console.log(chores)
@@ -115,6 +120,20 @@ function validatePerson(request, response, next) {
   }
 }
 
+// Check to see if new chore meets required values
+function validateChore(request, response, next) {
+  const newChore = request.body
+  console.log('this is newChore in validation', newChore)
+  if (newChore.description) {
+    if (newChore.people_id) {
+      next()
+    } else {
+      response.status(500).response.json({ message: 'inlcude a people_id for this chore'})
+    }
+  } else {
+    response.status(500).response.json({ message: 'please include a description for a new chore' })
+  }
+}
 
 
 module.exports = server;
