@@ -1,4 +1,4 @@
-export const peopleArray = [
+const peopleArray = [
   { id: 1,
   name: 'Frodo Baggins',
   chores: [] }, // 1
@@ -27,3 +27,5 @@ export const peopleArray = [
     name: 'Aragorn',
     chores: [] }, // 9
 ]
+
+module.exports = peopleArray

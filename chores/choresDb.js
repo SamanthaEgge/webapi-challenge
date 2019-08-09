@@ -17,16 +17,20 @@ const choresArray = [
     id: 3,  /// created
     people_id: 2,  ///required
     description: 'Heres my third chore!',  /// required
-    notes: 'heres an optional note',  /// optional
+    notes: '',  /// optional
     completed: false  /// false on creation
   }
 ]
 
+function get() {
+  return choresArray
+}
+
+function getChoresById() {
+  return console.log('getting set up')
+}
+
 module.exports = {
   get,
   getChoresById
-}
-
-function get() {
-  return choresArray
 }
