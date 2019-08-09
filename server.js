@@ -118,18 +118,51 @@ function getChoresById(peopID) {
   return filteredChores
 }
 
-async function createChore(chore) {
-  console.log('this is chore in createChore', chore)
-  try {
-    const validation = await validateChore(chore)
-    console.log('validation in createChore', validation)
-    const structuredChore = await manipulateNewChore(chore)
-    console.log('this is structuredChore in createChore', structuredChore)
-    // const updatedArray = [...choresArray, structuredChore]
-    // console.log(updatedArray)
-    return structuredChore
-  } catch (e) {
-    console.log('something broke')
+// async function createChore(chore) {
+//   console.log('this is chore in createChore', chore)
+//   try {
+//     const validation = await validateChore(chore)
+//     console.log('validation in createChore', validation)
+//     const structuredChore = await manipulateNewChore(chore)
+//     console.log('this is structuredChore in createChore', structuredChore)
+//     // const updatedArray = [...choresArray, structuredChore]
+//     // console.log(updatedArray)
+//     return structuredChore
+//   } catch (e) {
+//     console.log('something broke')
+//   }
+// }
+
+function createChore(newChore) {
+  if (newChore.description) {
+    if (newChore.people_id) {
+      let demoChores = choresArray.slice(0)
+      let lastChore = demoChores.pop()
+      console.log('this is last chore', lastChore)
+      let lastID = parseInt(lastChore.id)
+      let manipulateChore = newChore
+      console.log(manipulateChore)
+      console.log(lastID)
+      console.log('testing', lastID + 1)
+      if (manipulateChore.notes) {
+        return manipulateChore = {
+          ...newChore,
+          id: lastID+1,
+          completed: false,
+        }
+      } else {
+        return manipulateChore = {
+          ...newChore,
+          id: lastID+1,
+          completed: false,
+          notes: ''
+        }
+      }
+    } else {
+      response.status(500).response.json({ message: 'inlcude a people_id for this chore'})
+    }
+  } else {
+    response.status(500).response.json({ message: 'please include a description for a new chore' })
   }
 }
 
@@ -143,6 +176,7 @@ server.get('/', (req, res) => {
 
 //// Get a list of chores
 server.get('/chores', (request, response) => {
+
   const chores = getChores()
   // console.log('checking to see if chores has something', chores)
   response.status(200).json(chores)
@@ -171,16 +205,16 @@ server.post('/chores', (request, response) => {
 //// modify a current chore
 server.put('/chores/:id', (request, response) => {
   const choreID = request.params.id
-  const choreChange = request.body
+  const { description, notes, completed } = request.body
+  // console.log('chorechange', choreChange)
   console.log(parseInt(choreID))
   choresArray.forEach(chore => {
     if (parseInt(choreID) === chore.id) {
       console.log(chore.id)
-      chore = {
-        ...chore,
-        choreChange
-      }
-      console.log(chore)
+      if (description) chore.description = description;
+      if (notes) chore.notes = notes;
+      if (completed) chore.completed = completed;
+      console.log('updated chore', chore)
     } else {
       chore
     }
