@@ -3,7 +3,7 @@ const express = require('express');
 const server = express();
 server.use(express.json())
 
-const peopleArray = [
+let peopleArray = [
   { id: 1,
   name: 'Frodo Baggins',
   chores: [] }, // 1
@@ -33,7 +33,7 @@ const peopleArray = [
     chores: [] }, // 9
 ]
 
-const choresArray = [
+let choresArray = [
   {
     id: 1,  /// created
     people_id: 1,  ///required
@@ -73,11 +73,11 @@ function validateChore(newChore) {
 }
 
 function manipulateNewChore(chore) {
-  const demoChores = choresArray.slice(0)
-  console.log(demoChores)
-  const lastChore = demoChores.pop()
-  const lastID = parseInt(lastChore.id)
   console.log('we hit manipulateNewChore')
+  let demoChores = choresArray.slice(0)
+  let lastChore = demoChores.pop()
+  console.log('this is last chore', lastChore)
+  let lastID = parseInt(lastChore.id)
   let manipulateChore = chore
   console.log(manipulateChore)
   console.log(lastID)
@@ -124,10 +124,16 @@ async function createChore(chore) {
     console.log('validation in createChore', validation)
     const structuredChore = await manipulateNewChore(chore)
     console.log('this is structuredChore in createChore', structuredChore)
-    return choresArray= [...choresArray, structuredChore]
+    // const updatedArray = [...choresArray, structuredChore]
+    // console.log(updatedArray)
+    return structuredChore
   } catch (e) {
     console.log('something broke')
   }
+}
+
+function modifyChore(choreID) {
+
 }
 
 server.get('/', (req, res) => {
@@ -137,7 +143,7 @@ server.get('/', (req, res) => {
 //// Get a list of chores
 server.get('/chores', (request, response) => {
   const chores = getChores()
-  console.log('checking to see if chores has something', chores)
+  // console.log('checking to see if chores has something', chores)
   response.status(200).json(chores)
 })
 
@@ -154,7 +160,15 @@ server.get('/chores/:id', (request, response) => {
 server.post('/chores', (request, response) => {
   const addedChore = request.body
   const createaChore = createChore(addedChore)
+  console.log('createaChore response', createaChore)
+  choresArray = [...choresArray, createaChore]
+
   response.status(202).json(createaChore)
+})
+
+server.put('/chores/:id', (request, response) => {
+  const choreID = request.params.id
+
 })
 
 module.exports = server;
