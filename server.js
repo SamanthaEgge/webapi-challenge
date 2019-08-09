@@ -73,7 +73,9 @@ function validateChore(newChore) {
 }
 
 function manipulateNewChore(chore) {
-  const lastChore = choresArray.pop()
+  const demoChores = choresArray.slice(0)
+  console.log(demoChores)
+  const lastChore = demoChores.pop()
   const lastID = parseInt(lastChore.id)
   console.log('we hit manipulateNewChore')
   let manipulateChore = chore
@@ -112,9 +114,7 @@ function getChoresById(peopID) {
       console.log('chore check??', chore)
     }
   })
-
   return filteredChores
-
 }
 
 async function createChore(chore) {
@@ -124,7 +124,7 @@ async function createChore(chore) {
     console.log('validation in createChore', validation)
     const structuredChore = await manipulateNewChore(chore)
     console.log('this is structuredChore in createChore', structuredChore)
-    return structuredChore
+    return choresArray= [...choresArray, structuredChore]
   } catch (e) {
     console.log('something broke')
   }
