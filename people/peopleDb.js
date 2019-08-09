@@ -28,4 +28,4 @@ const peopleArray = [
     chores: [] }, // 9
 ]
 
-module.exports = peopleArray
+// module.exports = peopleArray
