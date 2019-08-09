@@ -39,7 +39,7 @@ let choresArray = [
     people_id: 1,  ///required
     description: 'Heres my first chore!',  /// required
     notes: 'heres an optional note',  /// optional
-    completed: false  /// false on creation
+    completed: true  /// false on creation
   },
   {
     id: 2,  /// created
@@ -96,10 +96,6 @@ function manipulateNewChore(chore) {
       notes: ''
     }
   }
-}
-
-function getChores() {
-  return choresArray
 }
 
 function getChoresById(peopID) {
@@ -166,20 +162,28 @@ function createChore(newChore) {
   }
 }
 
-function modifyChore(choreID) {
-
-}
-
 server.get('/', (req, res) => {
   res.send(`<h2>This server is initialized</h2>`)
 });
 
 //// Get a list of chores
 server.get('/chores', (request, response) => {
+  const sortReq = request.query
+  console.log('sortReq in .get', sortReq)
 
-  const chores = getChores()
-  // console.log('checking to see if chores has something', chores)
-  response.status(200).json(chores)
+  if (sortReq.completed) {
+    let filtered = choresArray.filter(chore => JSON.stringify(chore.completed) === sortReq.completed)
+    response.status(200).json(filtered)
+  } else {
+    response.status(200).json(choresArray)
+  }  
+
+  // if (!sortReq) {
+  //   response.status(200).json(choresArray)
+  // } else {
+  //   let filtered = choresArray.filter(chore => JSON.stringify(chore.completed) === sortReq.completed)
+  //   response.status(200).json(filtered)
+  // }  
 })
 
 
