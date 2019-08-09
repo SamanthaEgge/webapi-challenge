@@ -108,7 +108,8 @@ function getChoresById(peopID) {
   choresArray.map(chore => {
     console.log(chore.people_id)
     console.log(peopID)
-    choreManip = chore.people_id.toString()
+    let choreManip = chore.people_id.toString()
+    // let choreManip = chore.people_id
     if (choreManip === peopID) {
       filteredChores.push(chore)
       console.log('chore check??', chore)
@@ -168,7 +169,11 @@ server.post('/chores', (request, response) => {
 
 server.put('/chores/:id', (request, response) => {
   const choreID = request.params.id
-
+  let foundChore = []
+  choresArray.map(chore => {
+    console.log(chore.id)
+  })
+  response.status(200).json(foundChore)
 })
 
 module.exports = server;
